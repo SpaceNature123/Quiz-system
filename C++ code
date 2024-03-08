@@ -1,0 +1,152 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Questions
+{
+  private:
+    vector<string> questions, options, correct;
+    string name, correctAnswer;
+    int mark;
+    bool state = 0;
+    void showOptions(int x)
+    {
+        int start = x * 4;
+        for (int i = 0; i < 4; i++)
+        {
+            cout << char('a' + i) << ") " << options[start + i] << endl;
+        }
+    }
+
+    void clear()
+    {
+        cout << "\033[2J\033[1;1H"; //To clear the screen
+        cout << "\t\t\t\t   TEST\t\t\t\t" << name << "\n\n\n";
+    }
+    void addQuestion()
+    {
+        clear();
+        cout << "Enter question: ";
+        cin.ignore();
+        string question;
+        getline(cin, question);
+        questions.push_back(question);
+
+        for (char i = 'a'; i <= 'd'; i++)
+        {
+            cout << "Enter option " << i << ": ";
+            string option;
+            getline(cin, option);
+            options.push_back(option);
+        }
+        clear();
+        showOptions(questions.size() - 1);
+        char correctOption;
+        cout << "Which is the correct answer (A/B/C/D)? \n->";
+        cin >> correctOption;
+        correctOption = tolower(correctOption);
+        correct.push_back(string(1, correctOption));
+        clear();
+        cout << "Question added successfully." << endl;
+    }
+
+    void deleteQuestion()
+    {
+        clear();
+        if (questions.empty())
+        {
+            cout << "No questions to delete." << endl;
+            return;
+        }
+
+        cout << "Current questions:" << endl;
+        for (size_t i = 0; i < questions.size(); i++)
+        {
+            cout << i + 1 << ". " << questions[i] << endl;
+        }
+
+        size_t index;
+        cout << "Enter the index of the question to delete: ";
+        cin >> index;
+        index--;
+
+        if (index >= 0 && index < questions.size())
+        {
+            questions.erase(questions.begin() + index);
+            options.erase(options.begin() + index * 4, options.begin() + index * 4 + 4);
+            correct.erase(correct.begin() + index);
+            cout << "Question deleted successfully." << endl;
+        }
+        else
+        {
+            cout << "Invalid index." << endl;
+        }
+    }
+    void school()
+    {
+        cout << "Enter your name/school name\n";
+        getline(cin, name);
+        state = 1;
+    }
+
+  public:
+    void display()
+    {
+        clear();
+        char choice;
+        do
+        {
+            cout << "Menu:\n";
+            cout << "a) Add a question\n";
+            cout << "b) Delete a question\n";
+            cout << "c) Test questions\n";
+            cout << "d) Exit\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+
+            switch (choice)
+            {
+            case 'a':
+                addQuestion();
+                break;
+            case 'b':
+                deleteQuestion();
+                break;
+            case 'c':
+                // Implement testing functionality
+                cout << "Testing questions..." << endl;
+                cout << "\t\t\t" << name;
+                int start;
+                for (int i = 0; i < questions.size(); i++)
+                {
+                    start = 4 * i;
+                    char opt = 'a';
+                    cout << questions[i] << endl;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        cout << opt << ") " << options[start + j] << endl;
+                        opt++;
+                    }
+                    cout << "Enter correct answer\n";
+                    cin >> correctAnswer;
+                    if (correctAnswer == correct[i])
+                        mark++;
+                }
+                cout << "Mark is " << mark << endl;
+                break;
+            case 'd':
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+            }
+        } while (choice != 'd');
+    }
+};
+
+int main()
+{
+    Questions quiz;
+    quiz.display();
+    return 0;
+}
