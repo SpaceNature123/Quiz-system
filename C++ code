@@ -7,7 +7,7 @@ class Questions
   private:
     vector<string> questions, options, correct;
     string name, correctAnswer;
-    int mark;
+    int mark = 0;
     bool state = 0;
     void showOptions(int x)
     {
